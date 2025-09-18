@@ -83,47 +83,31 @@ resource "aws_instance" "web" {
 
   user_data = <<-EOF
 #!/bin/bash
-set -eux
+set -euxo pipefail
+# mirror output to console + log for easy debugging
 exec > >(tee -a /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1
-yum update -y
-yum install -y python3-pip
-pip3 install --no-cache-dir flask
 
-cat >/root/app.py <<'PY'
+yum update -y
+amazon-linux-extras install docker -y || yum install -y docker
+systemctl enable --now docker
+docker --version
+
+#  tiny Flask app inside Python container 
+docker run -d --restart unless-stopped --name hello-api -p 8080:8080 -e CLOUD=aws \
+  python:3.11-slim bash -lc "pip install flask && python - <<'PY'
 from flask import Flask, jsonify
 import socket, os
 app = Flask(__name__)
-@app.get("/")
-def root():
-    return jsonify(ok=True, cloud=os.getenv("CLOUD","aws"), host=socket.gethostname(), message="hello from AWS")
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
-PY
+@app.get('/')
+def r():
+    return jsonify({'ok': True, 'cloud': os.getenv('CLOUD','aws'), 'host': socket.gethostname(), 'message': 'hello from AWS (docker)'})
+app.run(host='0.0.0.0', port=8080)
+PY"
 
-# create a simple systemd service so it survives reboots
-cat >/etc/systemd/system/hello-api.service <<'UNIT'
-[Unit]
-Description=Hello API
-After=network-online.target
-Wants=network-online.target
-
-[Service]
-Environment=CLOUD=aws
-ExecStart=/usr/bin/python3 /root/app.py
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-UNIT
-
-systemctl daemon-reload
-systemctl enable --now hello-api.service
-
-# show listeners to confirm 0.0.0.0:8080 is up
+# show containers and listeners
+docker ps -a
 ss -ltnp || true
 EOF
-
-  tags = { Name = "multi-cloud-instance" }
 }
 output "public_ip" { value = aws_instance.web.public_ip }
 output "service_url" { value = "http://${aws_instance.web.public_ip}:8080/" }
