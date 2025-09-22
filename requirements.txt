@@ -4,6 +4,34 @@ requests>=2.32,<3
 pandas>=2.2,<3
 streamlit>=1.36,<2
 flask>=3.0,<4
+httpx>=0.27
+anyio>=4.4
 
 # boto3>=1.34,<2                 # AWS access
 # google-cloud-storage>=2.16,<3  # GCP access
+echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | \ sudo tee /etc/apt/sources.list.d/k6.list
+
+k6 run tests/k6/smoke.js \
+  -e TARGET=http://52.90.47.173:8080/ \
+  -e EXPECT_CLOUD=aws \
+  --vus 5 --duration 10s
+
+
+
+AWS IP: 52.90.47.173
+GCP IP: 34.122.14.49
+
+
+k6 run tests/k6/smoke.js \
+  -e TARGET=http://52.90.47.173:8080/ \
+  -e EXPECT_CLOUD=aws \
+  --vus 5 --duration 10s \
+  --tag provider=aws \
+  --summary-export results/k6/aws/smoke/smoke_$ts.json
+
+k6 run tests/k6/smoke.js \
+  -e TARGET=http://34.122.14.49:8080/ \
+  -e EXPECT_CLOUD=gcp \
+  --vus 5 --duration 10s \
+  --tag provider=gcp \
+  --summary-export results/k6/gcp/smoke/smoke_$ts.json
