@@ -157,7 +157,7 @@ python tools/cli.py dashboard
 
 ### Detailed Results
 <img src="docs/img/example-detailed.png" width="800">
-![Example CSV Export of Results](docs/csv/example_results_export.csv)
+[Example CSV Export of Results](docs/csv/example_results_export.csv)
 
 ### AWS vs GCP (p95 latency)
 <img src="docs/img/dashboard-p95.png" width="800">
@@ -187,7 +187,7 @@ python tools/cli.py dashboard
 
 
 ## Extending Providers (Azure etc.,)
-- Create ```terraform/azure```
+- Create ```terraform/azure``` and spin up instance with ```main.tf```
 - Return the same ```service_url``` output
 - Add the provider to ```DIR_MAP``` variable in ```tools/cli.py```
 
