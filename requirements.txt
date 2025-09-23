@@ -7,7 +7,5 @@ flask>=3.0,<4
 httpx>=0.27
 anyio>=4.4
 
-# boto3>=1.34,<2                 # AWS access
-# google-cloud-storage>=2.16,<3  # GCP access
 
 

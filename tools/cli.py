@@ -172,6 +172,14 @@ def all():
 
     console.rule(f"[bold green]All tests completed[/bold green]")
 
+@app.command()
+def dashboard():
+    # Launch the Streamlit dashboard to view results
+    import subprocess, sys
+    viewer_script = REPO_ROOT / "tools" / "viewer.py"
+    console.print(f"[cyan]Launching results viewer...[/cyan]")
+    subprocess.run([sys.executable, "-m", "streamlit", "run", str(viewer_script)])
+
 if __name__ == "__main__":
     app()
     

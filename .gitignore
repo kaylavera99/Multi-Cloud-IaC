@@ -1,6 +1,7 @@
 .venv/
 shortcut.txt
 !.terraform.lock.hcl
+terraform.tfstate.backup
 .terraform/
 *.tfstate
 *.tfstate.*
