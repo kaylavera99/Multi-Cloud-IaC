@@ -167,7 +167,7 @@ python tools/cli.py dashboard
  
 
 ## What these tests verify
-#### **Smoke Test** ```tests/k6/smoke.js```####
+#### **Smoke Test** ```tests/k6/smoke.js``` 
 - HTTP 200 responses
 - Response JSON has ```ok: true```
 - Check that the ```cloud``` equals the expected provider (```EXPECT_CLOUD```)
@@ -175,7 +175,7 @@ python tools/cli.py dashboard
 - Goal: **Correctness and basic reachability**
 
 
-#### **Load Test** ```tests/k6/load.js```###
+#### **Load Test** ```tests/k6/load.js```
 - Staged traffic: 2m ramp, 3m steady at ~50 VUs, 1m ramp down
 - Thresholds:
     - ```http_req_failed``` rate less than 1%
