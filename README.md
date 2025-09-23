@@ -49,6 +49,8 @@ python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
+
+
 ### 2. Provision AWS Instance
 ``` 
 cd terraform/aws
@@ -56,6 +58,8 @@ terraform init
 terraform apply
 ```
 **Outputs**:```public_ip, service_url (http://X.X.X.X/8080)```
+
+
 ### 3. Provision GCP Instance
 ```
 cd .../gcp
@@ -69,21 +73,24 @@ terraform apply -auto-approve -var="project_id=<PROJECT_ID>"
 
 **Output**: ```service_url (http://X.X.X.X/8080)```
 
-Note: The GCP instance uses ```metadata_startup_script=file("${path.module}/startup.sh")```. 
+***Note***: The GCP instance uses ```metadata_startup_script=file("${path.module}/startup.sh")```. 
 Make sure ```startup.sh``` uses LF line endings.
+
+
 
 ### 4. Check Endpoints
 ```
 curl "$(terraform -chdir=terraform/aws output -raw service_url)"
 curl "$(terraform -chdir=terraform/gcp output -raw service_url)"
 ```
+
 **Output should be JSON File with:**```{"ok": true, "cloud": "...", "message": "...", "hostname": "..."}```
 
 
 ## Testing
 ### Option 1: Direct k6
 
-To run the k6 directly: 
+To run the k6 directly (bash): 
 ```
 # Smoke tests
 k6 run tests/k6/smoke.js \
@@ -113,10 +120,10 @@ k6 run tests/k6/smoke.js \
   -e EXPECT_CLOUD=gcp \
   --tag provider=gcp \
   --summary-export results/k6/gcp/load/load_$ts.json
-
 ```
 
 ### Option 2: Python CLI (recommended)
+
 ```
 # From repo root (venv active)
 python tools/cli.py smoke aws
@@ -127,33 +134,48 @@ python tools/cli.py load gcp
 
 # Or, both clouds, both smoke and load tests
 python tools/cli.py all
-
 ```
-The CLI prints a short summary table and saves the JSON file to ```results/k6<provider>/<kind>```. 
 
-## Viewing the Results on Streamlit Dashboard
+The CLI prints a short summary table and saves the JSON file to ```results/k6/<provider>/<kind>```. 
+
+
+
+# Viewing the Results on Streamlit Dashboard
 ```
 # From repo root (venv active)
 streamlit run viewer.py
 
 # Or, run as a CLI command
 python tools/cli.py dashboard
-
 ```
 **Outputs:** URL to view dashboard in browser.
 
-<hr />
+
+## Dashboard Examples
+### Dashboard Overview
+<img src="docs/img/overview.png" width="800">
+
+### Detailed Results
+<img src="docs/img/example-detailed.png" width="800">
+![Example CSV Export of Results](docs/csv/example_results_export.csv)
+
+### AWS vs GCP (p95 latency)
+<img src="docs/img/dashboard-p95.png" width="800">
+
+### Fail Rate Distribution
+<img src="docs/img/fail-rate-distribution.png" width="800">
+ 
 
 ## What these tests verify
-
-**Smoke Test** ```tests/k6/smoke.js```
+#### Smoke Test** ```tests/k6/smoke.js```####
 - HTTP 200 responses
 - Response JSON has ```ok: true```
 - Check that the ```cloud``` equals the expected provider (```EXPECT_CLOUD```)
 - Low and steady concurrency (the default ```--vus``` and ```--duration``` are small)
 - Goal: **Correctness and basic reachability**
 
-**Load Test** ```tests/k6/load.js```
+
+#### Load Test** ```tests/k6/load.js```###
 - Staged traffic: 2m ramp, 3m steady at ~50 VUs, 1m ramp down
 - Thresholds:
     - ```http_req_failed``` rate less than 1%
@@ -162,7 +184,11 @@ python tools/cli.py dashboard
 - Goal: **Stability and latency under modest load**
 
 
+
+
 ## Extending Providers (Azure etc.,)
 - Create ```terraform/azure```
 - Return the same ```service_url``` output
 - Add the provider to ```DIR_MAP``` variable in ```tools/cli.py```
+
+
