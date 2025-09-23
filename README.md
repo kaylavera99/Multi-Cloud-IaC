@@ -157,7 +157,7 @@ python tools/cli.py dashboard
 
 ### Detailed Results
 <img src="docs/img/example-detailed.png" width="800">
-[Example CSV Export of Results](https://github.com/kaylavera99/Multi-Cloud-IaC/blob/19da066aa11a4fa43b3983583f8684bc7534991a/docs/csv/example_results_export.csv)
+<a href="docs/csv/example_results_export.csv">Example CSV Export of Results</a>
 
 ### AWS vs GCP (p95 latency)
 <img src="docs/img/dashboard-p95.png" width="800">
