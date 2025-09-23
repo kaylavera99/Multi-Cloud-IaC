@@ -21,6 +21,7 @@ app/__pycache__/
 __pycache__/
 .venv/
 Dockerfile
+.dockerignore
 
 # Secrets
 *.pem
