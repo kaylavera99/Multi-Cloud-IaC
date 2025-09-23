@@ -7,8 +7,8 @@ Spinning up two identical 'hello' APIs on identical AWS and GCP instances using 
 - k6 (CLI)
 - Python 3.10+ (venv recommended)
 - Docker (on cloud instances, installed by the startup scripts)
-- GCP: Google Cloud SDK (gcloud), a project (you'll pass var.project_id)
-- AWS: an accounr with a default VPC and subnet in your region
+- GCP: Google Cloud SDK (```gcloud```), a project (you'll pass ```var.project_id```)
+- AWS: an account with a default VPC and subnet in your region
 
 
 ## Project Structure
