@@ -12,6 +12,7 @@ Spinning up two identical 'hello' APIs on identical AWS and GCP instances using 
 
 
 ## Project Structure
+```
 multi-cloud-iac/
 ├─ app/
 │ ├─ app.py # Local Flask app 
@@ -39,7 +40,7 @@ multi-cloud-iac/
 ├─ requirements.txt # All runtime dependencies (CLI + Streamlit + pandas + Flask, etc.)
 ├─ .gitignore
 └─ README.md
-
+```
 ## Set-Up
 ### 1. Python Environment and Dependencies
 ```
@@ -54,7 +55,7 @@ cd terraform/aws
 terraform init
 terraform apply
 ```
-Outputs:```public_ip, service_url (http://X.X.X.X/8080)```
+**Outputs**:```public_ip, service_url (http://X.X.X.X/8080)```
 ### 3. Provision GCP Instance
 ```
 cd .../gcp
@@ -64,10 +65,9 @@ gcloud config set project <PROJECT_ID>
 
 terraform init
 terraform apply -auto-approve -var="project_id=<PROJECT_ID>"
-
 ```
 
-Output: ```service_url (http://X.X.X.X/8080)```
+**Output**: ```service_url (http://X.X.X.X/8080)```
 
 Note: The GCP instance uses ```metadata_startup_script=file("${path.module}/startup.sh")```. 
 Make sure ```startup.sh``` uses LF line endings.
@@ -77,8 +77,7 @@ Make sure ```startup.sh``` uses LF line endings.
 curl "$(terraform -chdir=terraform/aws output -raw service_url)"
 curl "$(terraform -chdir=terraform/gcp output -raw service_url)"
 ```
-
-Output should be JSON File with: ```{"ok": true, "cloud": "...", "message": "...", "hostname": "..."}```
+**Output should be JSON File with:**```{"ok": true, "cloud": "...", "message": "...", "hostname": "..."}```
 
 
 ## Testing
@@ -118,7 +117,6 @@ k6 run tests/k6/smoke.js \
 ```
 
 ### Option 2: Python CLI (recommended)
-
 ```
 # From repo root (venv active)
 python tools/cli.py smoke aws
@@ -142,20 +140,20 @@ streamlit run viewer.py
 python tools/cli.py dashboard
 
 ```
-Outputs: URL to view dashboard in browser.
+**Outputs:** URL to view dashboard in browser.
 
 <hr />
 
 ## What these tests verify
 
-Smoke Test ```tests/k6/smoke.js```
+**Smoke Test** ```tests/k6/smoke.js```
 - HTTP 200 responses
 - Response JSON has ```ok: true```
 - Check that the ```cloud``` equals the expected provider (```EXPECT_CLOUD```)
 - Low and steady concurrency (the default ```--vus``` and ```--duration``` are small)
 - Goal: **Correctness and basic reachability**
 
-Load Test ```tests/k6/load.js```
+**Load Test** ```tests/k6/load.js```
 - Staged traffic: 2m ramp, 3m steady at ~50 VUs, 1m ramp down
 - Thresholds:
     - ```http_req_failed``` rate less than 1%
