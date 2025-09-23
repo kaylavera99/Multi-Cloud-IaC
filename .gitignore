@@ -1,40 +1,39 @@
-.venv/
-shortcut.txt
-!.terraform.lock.hcl
-terraform.tfstate.backup
+# Terraform
 .terraform/
+**/.terraform/
 *.tfstate
 *.tfstate.*
-**/.terraform/*
 crash.log
 crash.*.log
-
 *.tfvars
 *.tfvars.json
 *.auto.tfvars
-
-
-*.tfplan
-
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
 
-.terraformrc
-terraform.rc
+!.terraform.lock.hcl
 
 
-
+# Python / Docker Files
 app/__pycache__/
 __pycache__/
+.venv/
+Dockerfile
 
+# Secrets
 *.pem
 *.ppk
 *.key
 
+# IDEs and editors
 .vscode/
-.idea/
 .DS_Store
 *.code-workspace
 Thumbs.db
+shortcut.txt
+
+# Results
+results/.gitkeep
+!results/.gitkeep
