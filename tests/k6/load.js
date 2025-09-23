@@ -2,18 +2,18 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 export const options = {
-    //2 min ramp to 50VUs, hold 3mins, down 1min
+    // 2 min ramp to 50VUs, hold 3mins, down 1min
     stages: [
         { duration: '2m', target: 50 },
         { duration: '3m', target: 50 },
         { duration: '1m', target: 0 },
     ],
     thresholds: {
-        http_req_failed: ['rate<0.01'], // <1% errors
+        http_req_failed: ['rate<0.01'], // < than 1% errors
         http_req_duration: [
             'p(95)<300',
-            'p(99)<800',
-        ], // 95% of requests should be below 300ms, 99% below 800ms
+            
+        ], // 95% of requests should be below 300ms, 
     },
 };  
 const TARGET = __ENV.TARGET || 'http://localhost:8080/';

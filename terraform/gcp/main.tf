@@ -56,7 +56,7 @@ resource "google_compute_instance" "web" {
     network = "default"
 
     access_config {
-      // Ephemeral public IP
+      // ephemeral public IP
     }
   }
 
